@@ -36,4 +36,7 @@ Vagrant.configure("2") do |config|
 
   # set up MySQL database
   config.vm.provision 'shell', path: 'scripts/database.sh'
+
+  # start the service
+  config.vm.provision 'shell', inline: 'cd /apps/aspace/aspace && ./control start'
 end
