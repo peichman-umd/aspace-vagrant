@@ -17,4 +17,4 @@ unzip "$ASPACE_PKG"
 mv archivesspace "archivesspace-${ASPACE_VERSION}"
 
 mkdir -p /apps/aspace/aspace/{data,logs}
-chown -R "$SERVICE_USER_GROUP" /apps/aspace
+chown -R "$SERVICE_USER_GROUP" /apps/aspace /apps/"archivesspace-${ASPACE_VERSION}"/config
