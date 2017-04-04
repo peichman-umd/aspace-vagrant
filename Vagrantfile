@@ -15,6 +15,8 @@ Vagrant.configure("2") do |config|
      vb.memory = "1024"
   end
 
+  config.vm.provision 'shell', inline: 'puppet module install puppetlabs-mysql'
+
   # system packages
   config.vm.provision 'puppet'
 
@@ -31,4 +33,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision 'file', source: 'files/config.rb', destination: '/apps/archivesspace-1.5.2/config/config.rb'
   # control script
   config.vm.provision 'file', source: 'files/control', destination: '/apps/aspace/aspace/control'
+
+  # set up MySQL database
+  config.vm.provision 'shell', path: 'scripts/database.sh'
 end

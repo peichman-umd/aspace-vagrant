@@ -1,3 +1,10 @@
+include '::mysql::server'
+
+mysql::db { 'archivesspace':
+  user     => 'as',
+  password => 'as',
+}
+
 Package {
   allow_virtual => false,
 }

@@ -11,7 +11,6 @@ if [ ! -e "$ASPACE_PKG" ]; then
     curl -Lso "$ASPACE_PKG" "$ASPACE_PKG_URL"
 fi
 
-
 cd /apps
 unzip "$ASPACE_PKG"
 mv archivesspace "archivesspace-${ASPACE_VERSION}"
