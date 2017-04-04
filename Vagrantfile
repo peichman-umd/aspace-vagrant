@@ -29,4 +29,6 @@ Vagrant.configure("2") do |config|
 
   # ArchivesSpace config
   config.vm.provision 'file', source: 'files/config.rb', destination: '/apps/archivesspace-1.5.2/config/config.rb'
+  # control script
+  config.vm.provision 'file', source: 'files/control', destination: '/apps/aspace/aspace/control'
 end
