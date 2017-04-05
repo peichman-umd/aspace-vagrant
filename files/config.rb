@@ -66,7 +66,7 @@ AppConfig[:db_url] = "jdbc:mysql://localhost:3306/archivesspace?user=as&password
 ## Don't override _prefix or _proxy_prefix unless you know what you're doing
 #AppConfig[:frontend_prefix] = proc { "#{URI(AppConfig[:frontend_url]).path}/".gsub(%r{/+$}, "/") }
 #AppConfig[:frontend_proxy_prefix] = proc { "#{URI(AppConfig[:frontend_proxy_url]).path}/".gsub(%r{/+$}, "/") }
-#AppConfig[:solr_url] = "http://localhost:8090"
+AppConfig[:solr_url] = "http://192.168.40.101:8984/solr/archivesspace"
 #AppConfig[:indexer_url] = "http://localhost:8091"
 #AppConfig[:public_url] = "http://localhost:8081"
 #AppConfig[:public_prefix] = proc { "#{URI(AppConfig[:public_url]).path}/".gsub(%r{/+$}, "/") }
@@ -81,7 +81,7 @@ AppConfig[:db_url] = "jdbc:mysql://localhost:3306/archivesspace?user=as&password
 #AppConfig[:enable_backend] = true
 #AppConfig[:enable_frontend] = true
 #AppConfig[:enable_public] = true
-#AppConfig[:enable_solr] = true
+AppConfig[:enable_solr] = false
 #AppConfig[:enable_indexer] = true
 #AppConfig[:enable_docs] = true
 #

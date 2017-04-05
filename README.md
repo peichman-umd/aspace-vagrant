@@ -2,16 +2,34 @@
 
 UMD Libraries' ArchivesSpace Vagrant
 
-## Prerequisistes
+## Prerequisites
 
 * VirtualBox
 * [Oracle Java 8 JDK][jdk] (download and place in [dist](dist))
+* A Solr base box built from [solr-vagrant-base]:
+  
+  ```bash
+  cd /apps/git
+  git clone git@github.com:umd-lib/solr-vagrant-base.git
+  cd solr-vagrant-base
+  vagrant up
+  vagrant package --output solr.box
+```
+
+* An ArchivesSpace Solr core at `/apps/git/archivesspace-core`:
+  
+  ```bash
+  cd /apps/git
+  git clone git@bitbucket.org:umd-lib/archivesspace-core.git
+  ```
 
 ## Quick Start
 
 ```bash
+cd /apps/git
 git clone git@github.com:umd-lib/aspace-vagrant.git
 cd aspace-vagrant
+cp ../solr-vagrant-base/solr.box dist
 vagrant up
 ```
 
@@ -19,19 +37,30 @@ vagrant up
   * username: admin
   * password: admin 
 * Public interface: <http://192.168.40.100:8081/>
-* Solr: <http://192.168.40.100:8090/>
 * REST API: <http://192.168.40.100:8089/>
 
 Because the startup time for ArchivesSpace can be lengthy, you may need to wait a minute or two for all of these endpoints to come up.
 
-## Starting ArchivesSpace
+Solr will be running on its own VM, separate from the ArchivesSpace VM:
 
-The ArchivesSpace application is started as part of the provisioning process. In case you need to manually start it (for example, after running a `vagrant reload`), do the following:
+* Solr: <http://192.168.40.101:8984/>
+
+## Starting ArchivesSpace and Solr
+
+The ArchivesSpace and Solr applications are started as part of the provisioning process. In case you need to manually start them (for example, after running a `vagrant reload`), do the following:
 
 ```bash
-vagrant ssh
+# ArchivesSpace
+vagrant ssh aspace
 cd /apps/aspace/aspace
 ./control start
+```
+
+```bash
+# Solr
+vagrant ssh solr
+cd /apps/solr/solr
+./control startnossl
 ```
 
 ## License
@@ -39,3 +68,4 @@ cd /apps/aspace/aspace
 See the [LICENSE](LICENSE.md) file for license rights and limitations (Apache 2.0).
 
 [jdk]: http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html
+[solr-vagrant-base]: https://github.com/umd-lib/solr-vagrant-base
