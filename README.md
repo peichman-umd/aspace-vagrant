@@ -19,6 +19,16 @@ vagrant up
 
 Because the startup time for ArchivesSpace can be lengthy, you may need to wait a minute or two for all of these endpoints to come up.
 
+## Starting ArchivesSpace
+
+The ArchivesSpace application is started as part of the provisioning process. In case you need to manually start it (for example, after running a `vagrant reload`), do the following:
+
+```bash
+vagrant ssh
+cd /apps/aspace/aspace
+./control start
+```
+
 ## License
  
 See the [LICENSE](LICENSE.md) file for license rights and limitations (Apache 2.0).
