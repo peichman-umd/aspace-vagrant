@@ -38,5 +38,5 @@ Vagrant.configure("2") do |config|
   config.vm.provision 'shell', path: 'scripts/database.sh'
 
   # start the service
-  config.vm.provision 'shell', inline: 'cd /apps/aspace/aspace && ./control start'
+  config.vm.provision 'shell', inline: 'cd /apps/aspace/aspace && ./control start', privileged: false
 end
