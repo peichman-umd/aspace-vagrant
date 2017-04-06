@@ -49,6 +49,9 @@ Vagrant.configure("2") do |config|
 
     # ArchivesSpace config
     aspace.vm.provision 'file', source: 'files/config.rb', destination: '/apps/archivesspace-1.5.2/config/config.rb'
+    # Update startup script to write PIDFILE to a configurable location
+    # TODO: this should be fixed upstream; see https://issues.umd.edu/browse/LIBASPACE-52
+    aspace.vm.provision 'file', source: 'files/archivesspace.sh', destination: '/apps/archivesspace-1.5.2/archivesspace.sh'
     # control script
     aspace.vm.provision 'file', source: 'files/control', destination: '/apps/aspace/aspace/control'
 
