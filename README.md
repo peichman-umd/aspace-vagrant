@@ -2,6 +2,11 @@
 
 UMD Libraries' ArchivesSpace Vagrant
 
+## Prerequisistes
+
+* VirtualBox
+* [Oracle Java 8 JDK][jdk] (download and place in [dist](dist))
+
 ## Quick Start
 
 ```bash
@@ -32,3 +37,5 @@ cd /apps/aspace/aspace
 ## License
  
 See the [LICENSE](LICENSE.md) file for license rights and limitations (Apache 2.0).
+
+[jdk]: http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html

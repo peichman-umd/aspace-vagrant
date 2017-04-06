@@ -1,2 +1,4 @@
 .vagrant
-dist
+/dist/*.tar.gz
+/dist/*.zip
+/dist/*.box
