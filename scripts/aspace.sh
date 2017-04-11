@@ -11,10 +11,7 @@ if [ ! -e "$ASPACE_PKG" ]; then
     curl -Lso "$ASPACE_PKG" "$ASPACE_PKG_URL"
 fi
 
-cd /apps
-unzip "$ASPACE_PKG"
-mv archivesspace "archivesspace-${ASPACE_VERSION}"
+# unzip without overwriting existing files
+unzip -n -d /apps/aspace "$ASPACE_PKG"
 
-mkdir -p /apps/aspace/aspace/{data,logs}
-chown -R "$SERVICE_USER_GROUP" /apps/aspace \
-    /apps/"archivesspace-${ASPACE_VERSION}"/{config,archivesspace.sh}
+chown -R "$SERVICE_USER_GROUP" /apps/aspace/archivesspace

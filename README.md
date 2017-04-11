@@ -16,11 +16,18 @@ UMD Libraries' ArchivesSpace Vagrant
   vagrant package --output solr.box
 ```
 
-* An ArchivesSpace Solr core at `/apps/git/archivesspace-core`:
+* An [archivesspace-core] Solr core at `/apps/git/archivesspace-core`:
   
   ```bash
   cd /apps/git
   git clone git@bitbucket.org:umd-lib/archivesspace-core.git
+  ```
+  
+* An [aspace-env] runtime environment at `/apps/git/aspace-env`:
+
+  ```bash
+  cd /apps/git
+  git clone git@bitbucket.org:umd-lib/aspace-env.git
   ```
 
 ## Quick Start
@@ -69,3 +76,5 @@ See the [LICENSE](LICENSE.md) file for license rights and limitations (Apache 2.
 
 [jdk]: http://www.oracle.com/technetwork/java/javase/downloads/index-jsp-138363.html
 [solr-vagrant-base]: https://github.com/umd-lib/solr-vagrant-base
+[archivesspace-core]: https://bitbucket.org/umd-lib/archivesspace-core
+[aspace-env]: https://bitbucket.org/umd-lib/aspace-env

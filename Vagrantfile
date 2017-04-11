@@ -1,6 +1,9 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+git_username = `git config user.name`.chomp
+git_email = `git config user.email`.chomp
+
 Vagrant.configure("2") do |config|
 
   config.vm.define 'solr' do |solr|
@@ -27,6 +30,7 @@ Vagrant.configure("2") do |config|
     aspace.vm.network "private_network", ip: "192.168.40.100"
 
     aspace.vm.synced_folder "dist", "/apps/dist"
+    aspace.vm.synced_folder "/apps/git/aspace-env", "/apps/git/aspace-env"
 
     aspace.vm.provider "virtualbox" do |vb|
       # Customize the amount of memory on the VM
@@ -41,24 +45,24 @@ Vagrant.configure("2") do |config|
     # firewall rules
     aspace.vm.provision 'shell', path: 'scripts/openports.sh', args: [8080, 8081, 8089, 8090]
 
+    # configure Git
+    aspace.vm.provision 'shell', path: 'scripts/git.sh', args: [git_username, git_email], privileged: false
+    # install runtime env
+    aspace.vm.provision "shell", path: "scripts/env.sh"
+
     # Oracle JDK
     aspace.vm.provision 'shell', path: 'scripts/jdk.sh'
 
     # ArchivesSpace application
     aspace.vm.provision 'shell', path: 'scripts/aspace.sh'
 
-    # ArchivesSpace config
-    aspace.vm.provision 'file', source: 'files/config.rb', destination: '/apps/archivesspace-1.5.2/config/config.rb'
-    # Update startup script to write PIDFILE to a configurable location
-    # TODO: this should be fixed upstream; see https://issues.umd.edu/browse/LIBASPACE-52
-    aspace.vm.provision 'file', source: 'files/archivesspace.sh', destination: '/apps/archivesspace-1.5.2/archivesspace.sh'
-    # control script
-    aspace.vm.provision 'file', source: 'files/control', destination: '/apps/aspace/aspace/control'
+    # server-specific values
+    aspace.vm.provision 'file', source: 'files/env', destination: '/apps/aspace/config/env'
 
     # set up MySQL database
-    aspace.vm.provision 'shell', path: 'scripts/database.sh'
+    aspace.vm.provision 'shell', path: 'scripts/database.sh', privileged: false
 
     # start the service
-    aspace.vm.provision 'shell', inline: 'cd /apps/aspace/aspace && ./control start', privileged: false
+    aspace.vm.provision 'shell', inline: 'cd /apps/aspace && ./control start', privileged: false
   end
 end
