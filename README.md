@@ -29,6 +29,12 @@ UMD Libraries' ArchivesSpace Vagrant
   cd /apps/git
   git clone git@bitbucket.org:umd-lib/aspace-env.git
   ```
+  
+* Add the following line to your host's `/etc/hosts` file, so Apache can do the proper hostname-based routing to the public and staff interfaces:
+
+  ```
+  192.168.40.100 aspacelocal archiveslocal
+  ```
 
 ## Quick Start
 
@@ -40,11 +46,10 @@ cp ../solr-vagrant-base/solr.box dist
 vagrant up
 ```
 
-* Admin interface: <http://192.168.40.100:8080/>
+* Admin interface: <https://aspacelocal/>
   * username: admin
   * password: admin 
-* Public interface: <http://192.168.40.100:8081/>
-* REST API: <http://192.168.40.100:8089/>
+* Public interface: <https://archiveslocal/>
 
 Because the startup time for ArchivesSpace can be lengthy, you may need to wait a minute or two for all of these endpoints to come up.
 

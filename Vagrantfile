@@ -43,7 +43,7 @@ Vagrant.configure("2") do |config|
     aspace.vm.provision 'puppet', manifest_file: 'aspace.pp'
 
     # firewall rules
-    aspace.vm.provision 'shell', path: 'scripts/openports.sh', args: [8080, 8081, 8089, 8090]
+    aspace.vm.provision 'shell', path: 'scripts/openports.sh', args: [80, 443]
 
     # configure Git
     aspace.vm.provision 'shell', path: 'scripts/git.sh', args: [git_username, git_email], privileged: false
@@ -58,6 +58,11 @@ Vagrant.configure("2") do |config|
 
     # server-specific values
     aspace.vm.provision 'file', source: 'files/env', destination: '/apps/aspace/config/env'
+
+    # Apache runtime setup
+    aspace.vm.provision 'shell', path: 'scripts/apache.sh'
+    # HTTPS certificate for Apache
+    aspace.vm.provision 'shell', path: 'scripts/https-cert.sh'
 
     # set up MySQL database
     aspace.vm.provision 'shell', path: 'scripts/database.sh', privileged: false
