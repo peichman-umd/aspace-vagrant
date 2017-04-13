@@ -24,3 +24,10 @@ package { "unzip":
 package { 'git':
   ensure => present,
 }
+package { 'httpd':
+  ensure => present,
+}
+package { 'mod_ssl':
+  ensure  => present,
+  require => Package['httpd'],
+}
