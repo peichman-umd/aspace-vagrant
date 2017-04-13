@@ -21,3 +21,6 @@ package { "vim-enhanced":
 package { "unzip":
   ensure => present,
 }
+package { 'git':
+  ensure => present,
+}
