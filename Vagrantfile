@@ -28,6 +28,7 @@ Vagrant.configure("2") do |config|
 
     aspace.vm.hostname = 'aspacelocal'
     aspace.vm.network "private_network", ip: "192.168.40.100"
+    aspace.vm.network "private_network", ip: "192.168.40.102"
 
     aspace.vm.synced_folder "dist", "/apps/dist"
     aspace.vm.synced_folder "/apps/git/aspace-env", "/apps/git/aspace-env"
@@ -58,8 +59,9 @@ Vagrant.configure("2") do |config|
 
     # Apache runtime setup
     aspace.vm.provision 'shell', path: 'scripts/apache.sh'
-    # HTTPS certificate for Apache
-    aspace.vm.provision 'shell', path: 'scripts/https-cert.sh'
+    # HTTPS certificates for Apache
+    aspace.vm.provision 'shell', path: 'scripts/https-cert.sh', args: %w(aspacelocal 192.168.40.100)
+    aspace.vm.provision 'shell', path: 'scripts/https-cert.sh', args: %w(archiveslocal 192.168.40.102)
 
     # configure MySQL service
     aspace.vm.provision 'shell', path: 'scripts/mysql.sh'

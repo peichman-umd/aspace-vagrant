@@ -30,10 +30,11 @@ UMD Libraries' ArchivesSpace Vagrant
   git clone git@bitbucket.org:umd-lib/aspace-env.git
   ```
   
-* Add the following line to your host's `/etc/hosts` file, so Apache can do the proper hostname-based routing to the public and staff interfaces:
+* Add the following lines to your host's `/etc/hosts` file, so Apache can do the proper hostname-based routing to the public and staff interfaces:
 
   ```
-  192.168.40.100 aspacelocal archiveslocal
+  192.168.40.100 aspacelocal
+  192.168.40.102 archiveslocal
   ```
 
 ## Quick Start

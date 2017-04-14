@@ -1,23 +1,21 @@
 #!/bin/bash
 
-CACHED_SSL_CONF=/apps/dist/ssl
+DIST_DIR=/apps/dist
+HOSTNAME=$1
+IP_ADDRESS=$2
 
-if [ -e "$CACHED_SSL_CONF" ]; then
-    echo "Using HTTPS SSL configuration cached in dist/ssl"
-    cp -rp /apps/dist/ssl /apps
+if [ -e "$DIST_DIR/$HOSTNAME/ssl" ]; then
+    echo "Using HTTPS SSL configuration cached in $DIST_DIR/$HOSTNAME/ssl"
 else
-    for HOSTNAME in aspacelocal archiveslocal; do
-        IP_ADDRESS=192.168.40.100
+    # SSL Certificate (self-signed)
+    mkdir -p "$DIST_DIR/$HOSTNAME"/ssl/{key,csr,cert,cnf}
 
-        # SSL Certificate (self-signed)
-        mkdir -p /apps/ssl/{key,csr,cert,cnf}
+    KEY="$DIST_DIR/$HOSTNAME/ssl/key/${HOSTNAME}.key"
+    CSR="$DIST_DIR/$HOSTNAME/ssl/csr/${HOSTNAME}.csr"
+    CRT="$DIST_DIR/$HOSTNAME/ssl/cert/${HOSTNAME}.crt"
+    CNF="$DIST_DIR/$HOSTNAME/ssl/cnf/${HOSTNAME}.cnf"
 
-        KEY=/apps/ssl/key/${HOSTNAME}.key
-        CSR=/apps/ssl/csr/${HOSTNAME}.csr
-        CRT=/apps/ssl/cert/${HOSTNAME}.crt
-        CNF=/apps/ssl/cnf/${HOSTNAME}.cnf
-
-        cat > "$CNF" <<END
+    cat > "$CNF" <<END
 [ req ]
 prompt             = no
 distinguished_name = ${HOSTNAME}_dn
@@ -40,17 +38,15 @@ IP.1  = ${IP_ADDRESS}
 IP.2  = 127.0.0.1
 END
 
-        # Generate private key 
-        openssl genrsa -out "$KEY" 2048
+    # Generate private key 
+    openssl genrsa -out "$KEY" 2048
 
-        # Generate CSR 
-        openssl req -new -key "$KEY" -out "$CSR" -config "$CNF"
+    # Generate CSR 
+    openssl req -new -key "$KEY" -out "$CSR" -config "$CNF"
 
-        # Generate self-signed cert
-        openssl x509 -req -days 365 -in "$CSR" -signkey "$KEY" -out "$CRT" \
-            -extensions v3_req -extfile "$CNF"
-
-        # cache the SSL cert info for the next run of Vagrant
-        cp -rp /apps/ssl /apps/dist
-    done
+    # Generate self-signed cert
+    openssl x509 -req -days 365 -in "$CSR" -signkey "$KEY" -out "$CRT" \
+        -extensions v3_req -extfile "$CNF"
 fi
+
+cp -rp "$DIST_DIR/$HOSTNAME/ssl" /apps

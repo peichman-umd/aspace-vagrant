@@ -1,4 +1,6 @@
 .vagrant
+/dist/archiveslocal
+/dist/aspacelocal
 /dist/*.tar.gz
 /dist/*.zip
 /dist/*.box
