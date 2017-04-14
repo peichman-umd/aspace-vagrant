@@ -1,10 +1,3 @@
-include '::mysql::server'
-
-mysql::db { 'archivesspace':
-  user     => 'as',
-  password => 'as',
-}
-
 Package {
   allow_virtual => false,
 }
@@ -30,4 +23,13 @@ package { 'httpd':
 package { 'mod_ssl':
   ensure  => present,
   require => Package['httpd'],
+}
+package { 'mysql-server':
+  ensure => present,
+}
+
+firewall { '100 allow http and https access':
+  dport  => [80, 443],
+  proto  => tcp,
+  action => accept,
 }

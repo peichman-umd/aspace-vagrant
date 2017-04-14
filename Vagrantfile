@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define 'aspace' do |aspace|
-    aspace.vm.box = "puppetlabs/centos-7.0-64-puppet"
+    aspace.vm.box = "puppetlabs/centos-6.6-64-puppet"
     aspace.vm.box_version = "1.0.1"
 
     aspace.vm.hostname = 'aspacelocal'
@@ -37,13 +37,10 @@ Vagrant.configure("2") do |config|
       vb.memory = "1024"
     end
 
-    aspace.vm.provision 'shell', inline: 'puppet module install puppetlabs-mysql'
+    aspace.vm.provision 'shell', inline: 'puppet module install puppetlabs-firewall'
 
     # system packages
     aspace.vm.provision 'puppet', manifest_file: 'aspace.pp'
-
-    # firewall rules
-    aspace.vm.provision 'shell', path: 'scripts/openports.sh', args: [80, 443]
 
     # configure Git
     aspace.vm.provision 'shell', path: 'scripts/git.sh', args: [git_username, git_email], privileged: false
@@ -64,7 +61,9 @@ Vagrant.configure("2") do |config|
     # HTTPS certificate for Apache
     aspace.vm.provision 'shell', path: 'scripts/https-cert.sh'
 
-    # set up MySQL database
+    # configure MySQL service
+    aspace.vm.provision 'shell', path: 'scripts/mysql.sh'
+    # install JDBC driver and setup database
     aspace.vm.provision 'shell', path: 'scripts/database.sh', privileged: false
 
     # start the service
