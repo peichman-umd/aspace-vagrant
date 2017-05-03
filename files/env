@@ -3,6 +3,7 @@
 export SERVER_NAME=aspacelocal
 export PUBLIC_SERVER_NAME=archiveslocal
 export IP_ADDRESS=192.168.40.100
+export PUBLIC_IP_ADDRESS=192.168.40.102
 export SERVICE_USER=vagrant
 export SERVICE_GROUP=vagrant
 export ASPACE_DB_URL="jdbc:mysql://localhost:3306/archivesspace?user=as&password=as&useUnicode=true&characterEncoding=UTF-8"
