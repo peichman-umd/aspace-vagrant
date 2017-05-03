@@ -1,12 +1,17 @@
 #!/bin/bash
 
-yum install -y unzip
+SERVICE_USER_GROUP=vagrant:vagrant
 
-cd /apps/dist
-wget https://github.com/archivesspace/archivesspace/releases/download/v1.5.1/archivesspace-v1.5.1.zip
+# Aspace
+ASPACE_VERSION=1.5.2
+ASPACE_PKG=/apps/dist/archivesspace-v${ASPACE_VERSION}.zip
+# look for a cached tarball
+if [ ! -e "$ASPACE_PKG" ]; then
+    ASPACE_PKG_URL=https://github.com/archivesspace/archivesspace/releases/download/v${ASPACE_VERSION}/archivesspace-v${ASPACE_VERSION}.zip
+    curl -Lso "$ASPACE_PKG" "$ASPACE_PKG_URL"
+fi
 
-mkdir -p /apps/aspace
-cd /apps/aspace
-unzip /apps/dist/archivesspace-v1.5.1.zip
+# unzip without overwriting existing files
+unzip -n -d /apps/aspace "$ASPACE_PKG"
 
-chown -R vagrant:vagrant /apps/aspace
+chown -R "$SERVICE_USER_GROUP" /apps/aspace/archivesspace
