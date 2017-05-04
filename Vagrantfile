@@ -67,6 +67,9 @@ Vagrant.configure("2") do |config|
     aspace.vm.provision 'shell', path: 'scripts/mysql.sh'
     # install JDBC driver and setup database
     aspace.vm.provision 'shell', path: 'scripts/database.sh', privileged: false
+    
+    # install plugins 
+    aspace.vm.provision 'shell', path: 'scripts/plugins.sh', privileged: false
 
     # start the service
     aspace.vm.provision 'shell', inline: 'cd /apps/aspace && ./control start', privileged: false

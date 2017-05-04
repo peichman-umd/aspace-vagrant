@@ -11,7 +11,8 @@ if [ ! -e "$ASPACE_PKG" ]; then
     curl -Lso "$ASPACE_PKG" "$ASPACE_PKG_URL"
 fi
 
+
+
 # unzip without overwriting existing files
 unzip -n -d /apps/aspace "$ASPACE_PKG"
-
 chown -R "$SERVICE_USER_GROUP" /apps/aspace/archivesspace
