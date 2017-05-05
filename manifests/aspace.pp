@@ -29,7 +29,7 @@ package { 'mysql-server':
 }
 
 firewall { '100 allow http and https access':
-  dport  => [80, 443],
+  dport  => [80, 443, 8080],
   proto  => tcp,
   action => accept,
 }
