@@ -70,6 +70,14 @@ Vagrant.configure("2") do |config|
     
     # install plugins 
     aspace.vm.provision 'shell', inline: '/apps/aspace/scripts/plugins.sh', privileged: false
+    
+    # tweak the archivesspace.sh script 
+    aspace.vm.provision 'shell', inline: '/apps/aspace/scripts/append_log.sh', privileged: false
+    # add log rotate configuration 
+    aspace.vm.provision 'shell' do |s|
+      s.inline = 'cp /apps/git/aspace-env/config/etc/logrotate.d/aspace /etc/logrotate.d/aspace'
+      s.privileged = true
+    end
 
     # start the service
     aspace.vm.provision 'shell', inline: 'cd /apps/aspace && ./control start', privileged: false
