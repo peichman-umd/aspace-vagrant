@@ -3,7 +3,7 @@
 SERVICE_USER_GROUP=vagrant:vagrant
 
 # Aspace
-ASPACE_VERSION=1.5.2
+ASPACE_VERSION=2.0.1
 ASPACE_PKG=/apps/dist/archivesspace-v${ASPACE_VERSION}.zip
 # look for a cached tarball
 if [ ! -e "$ASPACE_PKG" ]; then
