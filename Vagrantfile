@@ -35,7 +35,7 @@ Vagrant.configure("2") do |config|
 
     aspace.vm.provider "virtualbox" do |vb|
       # Customize the amount of memory on the VM
-      vb.memory = "1024"
+      vb.memory = "1280"
     end
 
     aspace.vm.provision 'shell', inline: 'puppet module install puppetlabs-firewall'
