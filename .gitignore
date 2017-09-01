@@ -1,4 +1,5 @@
 .vagrant
+local.env
 /dist/archiveslocal
 /dist/aspacelocal
 /dist/*.tar.gz
