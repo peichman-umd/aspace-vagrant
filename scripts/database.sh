@@ -9,7 +9,7 @@ curl -Lso lib/mysql-connector-java-${MYSQL_JDBC_VERSION}.jar \
 
 # set up MySQL database
 mysql -u root <<END
-CREATE DATABASE archivesspace;
+CREATE DATABASE archivesspace default character set utf8;
 CREATE USER 'as'@'localhost' IDENTIFIED BY 'as';
 GRANT ALL PRIVILEGES ON archivesspace.* TO 'as'@'localhost';
 END
