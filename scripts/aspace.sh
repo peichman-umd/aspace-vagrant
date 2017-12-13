@@ -3,7 +3,7 @@
 SERVICE_USER_GROUP=vagrant:vagrant
 
 # Aspace
-ASPACE_VERSION=1.5.2
+ASPACE_VERSION=2.1.2
 ASPACE_PKG=/apps/dist/archivesspace-v${ASPACE_VERSION}.zip
 # look for a cached tarball
 if [ ! -e "$ASPACE_PKG" ]; then
@@ -11,7 +11,8 @@ if [ ! -e "$ASPACE_PKG" ]; then
     curl -Lso "$ASPACE_PKG" "$ASPACE_PKG_URL"
 fi
 
+
+
 # unzip without overwriting existing files
 unzip -n -d /apps/aspace "$ASPACE_PKG"
-
 chown -R "$SERVICE_USER_GROUP" /apps/aspace/archivesspace

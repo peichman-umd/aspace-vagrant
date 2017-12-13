@@ -4,6 +4,10 @@
 git_username = `git config user.name`.chomp
 git_email = `git config user.email`.chomp
 
+copy_dont_git = ENV["DO_NOT_USE_GIT"] === 'true'
+base_directory= ENV["BASE_DIRECTORY"] || "/apps/git"
+
+
 Vagrant.configure("2") do |config|
 
   config.vm.define 'solr' do |solr|
@@ -13,13 +17,13 @@ Vagrant.configure("2") do |config|
     solr.vm.hostname = 'aspacesolrlocal'
     solr.vm.network "private_network", ip: "192.168.40.101"
     solr.vm.synced_folder "dist", "/apps/dist"
-    solr.vm.synced_folder '/apps/git/archivesspace-core', '/apps/git/archivesspace-core'
+    solr.vm.synced_folder "#{base_directory}/archivesspace-core", '/apps/git/archivesspace-core'
 
     # start Solr (without SSL)
     solr.vm.provision "shell", privileged: false, inline: <<-SHELL
-      /apps/solr/scripts/core.sh /apps/git/archivesspace-core archivesspace
-      cd /apps/solr/solr && ./control startnossl
-    SHELL
+       /apps/solr/scripts/core.sh /apps/git/archivesspace-core archivesspace
+       cd /apps/solr/solr && ./control startnossl
+     SHELL
   end
 
   config.vm.define 'aspace' do |aspace|
@@ -31,11 +35,11 @@ Vagrant.configure("2") do |config|
     aspace.vm.network "private_network", ip: "192.168.40.102"
 
     aspace.vm.synced_folder "dist", "/apps/dist"
-    aspace.vm.synced_folder "/apps/git/aspace-env", "/apps/git/aspace-env"
+    aspace.vm.synced_folder "#{base_directory}/aspace-env", "/apps/git/aspace-env"
 
     aspace.vm.provider "virtualbox" do |vb|
       # Customize the amount of memory on the VM
-      vb.memory = "1024"
+      vb.memory = "1280"
     end
 
     aspace.vm.provision 'shell', inline: 'puppet module install puppetlabs-firewall'
@@ -46,8 +50,11 @@ Vagrant.configure("2") do |config|
     # configure Git
     aspace.vm.provision 'shell', path: 'scripts/git.sh', args: [git_username, git_email], privileged: false
     # install runtime env
-    aspace.vm.provision "shell", path: "scripts/env.sh"
-
+    if copy_dont_git 
+      aspace.vm.provision "shell", path: "scripts/env_no_git.sh"
+    else
+      aspace.vm.provision "shell", path: "scripts/env.sh"
+    end 
     # Oracle JDK
     aspace.vm.provision 'shell', path: 'scripts/jdk.sh'
 
@@ -67,6 +74,17 @@ Vagrant.configure("2") do |config|
     aspace.vm.provision 'shell', path: 'scripts/mysql.sh'
     # install JDBC driver and setup database
     aspace.vm.provision 'shell', path: 'scripts/database.sh', privileged: false
+    
+    # install plugins 
+    aspace.vm.provision 'shell', inline: '/apps/aspace/scripts/plugins.sh', privileged: false
+    
+    # tweak the archivesspace.sh script 
+    aspace.vm.provision 'shell', inline: '/apps/aspace/scripts/append_log.sh', privileged: false
+    # add log rotate configuration 
+    aspace.vm.provision 'shell' do |s|
+      s.inline = 'cp /apps/git/aspace-env/config/etc/logrotate.d/aspace /etc/logrotate.d/aspace'
+      s.privileged = true
+    end
 
     # start the service
     aspace.vm.provision 'shell', inline: 'cd /apps/aspace && ./control start', privileged: false
