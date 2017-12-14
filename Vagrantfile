@@ -42,7 +42,9 @@ Vagrant.configure("2") do |config|
       vb.memory = "1280"
     end
 
-    aspace.vm.provision 'shell', inline: 'puppet module install puppetlabs-firewall'
+    aspace.vm.provision "shell", inline: <<-SHELL
+      puppet module install puppetlabs-firewall --version 1.10.0
+    SHELL
 
     # system packages
     aspace.vm.provision 'puppet', manifest_file: 'aspace.pp'
