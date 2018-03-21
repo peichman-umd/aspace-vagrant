@@ -28,7 +28,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.define 'aspace' do |aspace|
     aspace.vm.box = "puppetlabs/centos-6.6-64-puppet"
-    aspace.vm.box_version = "1.0.1"
+    aspace.vm.box_version = "1.0.3"
 
     aspace.vm.hostname = 'aspacelocal'
     aspace.vm.network "private_network", ip: "192.168.40.100"
@@ -41,7 +41,8 @@ Vagrant.configure("2") do |config|
       # Customize the amount of memory on the VM
       vb.memory = "1280"
     end
-
+    
+    aspace.vm.provision 'shell', inline: 'yum --disablerepo=puppetlabs-pc1 update -y'
     aspace.vm.provision "shell", inline: <<-SHELL
       puppet module install puppetlabs-firewall --version 1.10.0
     SHELL
