@@ -41,7 +41,7 @@ Vagrant.configure("2") do |config|
       # Customize the amount of memory on the VM
       vb.memory = "1280"
     end
-    
+
     aspace.vm.provision 'shell', inline: 'yum --disablerepo=puppetlabs-pc1 update -y'
     aspace.vm.provision "shell", inline: <<-SHELL
       puppet module install puppetlabs-firewall --version 1.10.0
@@ -53,11 +53,11 @@ Vagrant.configure("2") do |config|
     # configure Git
     aspace.vm.provision 'shell', path: 'scripts/git.sh', args: [git_username, git_email], privileged: false
     # install runtime env
-    if copy_dont_git 
+    if copy_dont_git
       aspace.vm.provision "shell", path: "scripts/env_no_git.sh"
     else
       aspace.vm.provision "shell", path: "scripts/env.sh"
-    end 
+    end
     # Oracle JDK
     aspace.vm.provision 'shell', path: 'scripts/jdk.sh'
 
@@ -77,13 +77,16 @@ Vagrant.configure("2") do |config|
     aspace.vm.provision 'shell', path: 'scripts/mysql.sh'
     # install JDBC driver and setup database
     aspace.vm.provision 'shell', path: 'scripts/database.sh', privileged: false
-    
-    # install plugins 
+
+    # install plugins
     aspace.vm.provision 'shell', inline: '/apps/aspace/scripts/plugins.sh', privileged: false
-    
-    # tweak the archivesspace.sh script 
+
+    # local fixup for CAS OAuth
+    aspace.vm.provision 'file', source: 'files/aspace-oauth.frontend.plugin_init.rb', destination: '/apps/aspace/archivesspace/plugins/aspace-oauth/frontend/plugin_init.rb'
+
+    # tweak the archivesspace.sh script
     aspace.vm.provision 'shell', inline: '/apps/aspace/scripts/append_log.sh', privileged: false
-    # add log rotate configuration 
+    # add log rotate configuration
     aspace.vm.provision 'shell' do |s|
       s.inline = 'cp /apps/git/aspace-env/config/etc/logrotate.d/aspace /etc/logrotate.d/aspace'
       s.privileged = true
