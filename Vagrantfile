@@ -4,9 +4,8 @@
 git_username = `git config user.name`.chomp
 git_email = `git config user.email`.chomp
 
-copy_dont_git = ENV["DO_NOT_USE_GIT"] === 'true'
-base_directory= ENV["BASE_DIRECTORY"] || "/apps/git"
-
+copy_dont_git = true 
+base_directory='/home/chrisfitzpatrick/Code/umd/' 
 
 Vagrant.configure("2") do |config|
 
@@ -27,8 +26,8 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.define 'aspace' do |aspace|
-    aspace.vm.box = "puppetlabs/centos-6.6-64-puppet"
-    aspace.vm.box_version = "1.0.3"
+    aspace.vm.box = "puppetlabs/centos-7.2-64-puppet" 
+    aspace.vm.box_version = "1.0.1"
 
     aspace.vm.hostname = 'aspacelocal'
     aspace.vm.network "private_network", ip: "192.168.40.100"
@@ -42,9 +41,11 @@ Vagrant.configure("2") do |config|
       vb.memory = "1280"
     end
 
-    aspace.vm.provision 'shell', inline: 'yum --disablerepo=puppetlabs-pc1 update -y'
+    aspace.vm.provision 'shell', path: 'scripts/fix_puppet_gpg.sh'
+    aspace.vm.provision 'shell', inline: 'yum update -y'
     aspace.vm.provision "shell", inline: <<-SHELL
       puppet module install puppetlabs-firewall --version 1.10.0
+      puppet module install puppetlabs-docker 
     SHELL
 
     # system packages
@@ -58,41 +59,19 @@ Vagrant.configure("2") do |config|
     else
       aspace.vm.provision "shell", path: "scripts/env.sh"
     end
-    # Oracle JDK
-    aspace.vm.provision 'shell', path: 'scripts/jdk.sh'
 
-    # ArchivesSpace application
-    aspace.vm.provision 'shell', path: 'scripts/aspace.sh'
+    aspace.vm.provision 'shell', inline: <<-SHELL
+      cp /apps/aspace/docker-compose-vagrant.yml /apps/aspace/docker-compose.yml
+    SHELL
 
-    # server-specific values
-    aspace.vm.provision 'file', source: 'files/env', destination: '/apps/aspace/config/env'
-
-    # Apache runtime setup
-    aspace.vm.provision 'shell', path: 'scripts/apache.sh'
     # HTTPS certificates for Apache
     aspace.vm.provision 'shell', path: 'scripts/https-cert.sh', args: %w(aspacelocal 192.168.40.100)
     aspace.vm.provision 'shell', path: 'scripts/https-cert.sh', args: %w(archiveslocal 192.168.40.102)
-
-    # configure MySQL service
-    aspace.vm.provision 'shell', path: 'scripts/mysql.sh'
-    # install JDBC driver and setup database
-    aspace.vm.provision 'shell', path: 'scripts/database.sh', privileged: false
-
-    # install plugins
-    aspace.vm.provision 'shell', inline: '/apps/aspace/scripts/plugins.sh', privileged: false
-
-    # local fixup for CAS OAuth
-    aspace.vm.provision 'file', source: 'files/aspace-oauth.frontend.plugin_init.rb', destination: '/apps/aspace/archivesspace/plugins/aspace-oauth/frontend/plugin_init.rb'
-
-    # tweak the archivesspace.sh script
-    aspace.vm.provision 'shell', inline: '/apps/aspace/scripts/append_log.sh', privileged: false
-    # add log rotate configuration
-    aspace.vm.provision 'shell' do |s|
-      s.inline = 'cp /apps/git/aspace-env/config/etc/logrotate.d/aspace /etc/logrotate.d/aspace'
-      s.privileged = true
-    end
+    aspace.vm.provision 'shell', inline: <<-SHELL
+      openssl dhparam -out /apps/aspace/ssl/dhparam.pem 2048
+    SHELL
 
     # start the service
-    aspace.vm.provision 'shell', inline: 'cd /apps/aspace && ./control start', privileged: false
+    aspace.vm.provision 'shell', inline: 'cd /apps/aspace && ./control start'
   end
 end

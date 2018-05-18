@@ -49,4 +49,4 @@ END
         -extensions v3_req -extfile "$CNF"
 fi
 
-cp -rp "$DIST_DIR/$HOSTNAME/ssl" /apps
+find "$DIST_DIR/$HOSTNAME/ssl" -type f -exec cp {} /apps/aspace/ssl/certs \;

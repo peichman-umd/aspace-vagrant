@@ -24,7 +24,9 @@ package { 'mod_ssl':
   ensure  => present,
   require => Package['httpd'],
 }
-package { 'mysql-server':
+
+include 'docker'
+class { 'docker::compose':
   ensure => present,
 }
 
